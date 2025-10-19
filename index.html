@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Dikte - Kelime Gezinici</title>
+
+<!-- ✅ Child-friendly font -->
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#ffffff;
+    --muted:#f6f6f6;
+  }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:"Comic Neue","Comic Sans MS",sans-serif;
+    background:#fbfbfb;
+    color:#111;
+  }
+
+  .wrap{
+    width:720px;
+    max-width:94vw;
+    text-align:center;
+    padding:28px;
+  }
+
+  .title{
+    font-size:24px;
+    margin-bottom:18px;
+    font-weight:700;
+  }
+
+  .stage{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
+  }
+
+  .arrow-btn{
+    width:72px;
+    height:72px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:36px;
+    cursor:pointer;
+    user-select:none;
+    background:var(--muted);
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    transition:transform .12s ease,background .12s ease;
+  }
+  .arrow-btn:active{transform:translateY(2px) scale(.98);}
+  .arrow-btn:hover{background:#eee;}
+
+  .word-box{
+    width:300px;
+    height:150px;
+    border:3px solid #222;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--bg);
+    box-shadow:0 8px 28px rgba(0,0,0,0.06);
+    font-size:63px;         /* 👈 1.5× larger font */
+    font-weight:700;
+  }
+
+  .footer{
+    margin-top:18px;
+    color:#444;
+    font-size:15px;
+  }
+
+  .small{font-size:13px;color:#666;}
+
+  @media (max-width:520px){
+    .arrow-btn{width:56px;height:56px;font-size:30px;}
+    .word-box{width:86vw;height:120px;font-size:48px;}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="title">Kelime Gezinici (kısa → uzun)</div>
+
+    <div class="stage">
+      <div id="prevBtn" class="arrow-btn">◀</div>
+      <div class="word-box"><div id="wordText">—</div></div>
+      <div id="nextBtn" class="arrow-btn">▶</div>
+    </div>
+
+    <div class="footer">
+      <div id="counter">Kelime 0 / 0</div>
+      <div class="small">← / → tuşlarıyla da gezinebilirsin</div>
+    </div>
+  </div>
+
+<script>
+const rawWords = [
+  "an","at","al","en","et","el","in","il","it","na","ne","ni","ta","te","ti","la","li",
+  "ana","Ata","ala","Ali","ani","ati","ait","ene","ete","ela","ele","eni","eti","iti","ine","ile","ini","ili",
+  "anne","nane","nine","nene","tane","inat","İnan","ilan","iten","eten","ilet","itti","etti","lale","atla","etle","etli","alet","elti",
+  "anten","ninni","tente","nenene","ninene","tenine","antene","tantana","etini","enini","taneli","atletli","aile","talan","attan","etten","itten","laleli","aleni","Talat"
+];
+
+let words = Array.from(new Set(rawWords.map(s=>s.trim()).filter(Boolean)));
+words.sort((a,b)=>a.length!==b.length?a.length-b.length:a.localeCompare(b,'tr'));
+
+let idx=0;
+const wordText=document.getElementById('wordText');
+const counter=document.getElementById('counter');
+const prevBtn=document.getElementById('prevBtn');
+const nextBtn=document.getElementById('nextBtn');
+
+function render(){
+  if(!words.length){wordText.textContent="—";counter.textContent="Kelime 0 / 0";return;}
+  wordText.textContent=words[idx];
+  counter.textContent=`Kelime ${idx+1} / ${words.length}`;
+}
+function next(){if(idx<words.length-1){idx++;render();}}
+function prev(){if(idx>0){idx--;render();}}
+prevBtn.onclick=prev;
+nextBtn.onclick=next;
+document.addEventListener('keydown',e=>{
+  if(e.key==="ArrowRight")next();
+  else if(e.key==="ArrowLeft")prev();
+});
+render();
+</script>
+</body>
+</html>
